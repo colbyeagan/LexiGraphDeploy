@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>LexiGraph Stock Info</title>
+        <link href="https://fonts.cdnfonts.com/css/open-dyslexic" rel="stylesheet">
+        <link rel = "stylesheet" href = "../static/css/styles.css">
+    </head>
+    <header class = "flex-row">
+        <img src = "../static/images/logo.png" alt = "LexiGraph logo" id = "logo">
+        <form method="POST" action="/submit" class = "flex-row">
+            <input type="text" id="stock" name="stockname" placeholder="Your stock ticker here.." style = "margin-left: 0px; margin-top:20px">
+            <input type="submit" value="Submit" id = "submit" style = "margin-left: 0px; height: 50px; margin-top:20px">
+        </form>
+    </header>
+    <body>
+        <div class="flex about-div">
+            <span id="company-name" class = "about-values" id = "stockName">{{stockName}}</span>
+            <div class = "flex-row">
+                <p id="open-price">${{openPrice}}</p>
+                <img src = "../static/images/sound.png" alt = "Sound" class = "sound_img" id = "img1" data-target="1" style = "padding-top:20px;">
+            </div>
+            <div class="flex" id = "variant-prices" style = "gap: 0px;">
+                <p class = "green">High</p>
+                <span id="high-price" class = "about-values">{{highPrice}}</span>
+                <p class = "red">Low</p>
+                <span id="low-price" class = "about-values">{{lowPrice}}</span>
+            </div>
+            <button id = "view-chart">View Chart</button>
+        </div>
+        <div id="chart-container">
+            <img src="data:image/png;base64,{{ image_data }}" alt="Chart Image" id = "image-chart">
+        </div>
+    </body>
+</html>
+<script>
+    let speech = new SpeechSynthesisUtterance();
+    speech.lang = "en";
+    speech.rate = 0.8;
+    const speakButtons = document.querySelectorAll(".sound_img");
+    function speakText(event) {
+        let textToSpeak = ''; 
+        console.log(`speakText function has been called`);
+        const stockName = document.getElementById("company-name").textContent;
+        const priceName = document.getElementById("open-price").textContent;
+        const lowPrice = document.getElementById("low-price").textContent;
+        const highPrice = document.getElementById("high-price").textContent;
+        textToSpeak = "Your current stock ticker is " + stockName + ". The last updated price of this stock is " + priceName + ". The lowest price of the stock this year is " + lowPrice + "while the high price of the stock this year is " + highPrice;
+        speech.text = textToSpeak;
+        window.speechSynthesis.speak(speech);
+    }
+    speakButtons.forEach(button => {
+        button.addEventListener('click', speakText);
+    });
+    function display(event) {
+
+    }
+    const toggle = document.getElementById("view-chart");
+    const imageToToggle = document.getElementById("image-chart");
+    toggle.addEventListener("click", function() {
+        const currentDisplay = imageToToggle.style.display;
+        if (currentDisplay === "none") {
+            imageToToggle.style.display = "block";
+            toggle.textContent = "Hide Chart";
+            imageToToggle.scrollIntoView();
+        } else {
+            imageToToggle.style.display = "none";
+            toggle.textContent = "View Chart";
+        }
+});
+</script>

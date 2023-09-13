@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>LexiGraph</title>
+        <link href="https://fonts.cdnfonts.com/css/open-dyslexic" rel="stylesheet">
+        <link rel = "stylesheet" href = "../static/css/styles.css">    
+    </head>
+    <body>
+        <div id = "home-flex">
+            <img src = "../static/images/logo.png" alt = "Lexigraph Logo" id = "logo">
+            <div class = "sound-spacing">
+                <h1 data-text="LexiGraph" target = "0">LexiGraph</h1>
+                <img src = "../static/images/sound.png" alt = "Sound" class = "sound_img"  data-target="0">
+            </div>
+        </div>
+        <form method="POST" action="/submit" class = "flex">
+            <input type="text" id="stock" name="stockname" placeholder="Your stock ticker here..">
+            <input type="submit" value="Submit" id = "submit">
+        </form>
+    </body>
+    </html>
+<script>
+    let speech = new SpeechSynthesisUtterance();
+    speech.lang = "en";
+    const speakButtons = document.querySelectorAll(".sound_img");
+
+    function speakText(event) {
+        const targetIndex = event.target.getAttribute('data-target');
+        const allElements = document.getElementsByTagName('*');
+        let textToSpeak = ''; // Declare textToSpeak variable outside the loop
+
+        for (let i = 0; i < allElements.length; i++) {
+            const element = allElements[i];
+            if (element.getAttribute('target') === targetIndex) {
+                textToSpeak = element.getAttribute('data-text'); // Assign the value here
+                break; // Exit the loop once a match is found
+            }
+        }
+
+        if (textToSpeak) { // Check if textToSpeak is not empty
+            speech.text = textToSpeak;
+            window.speechSynthesis.speak(speech);
+        }
+    }
+
+        speakButtons.forEach(button => {
+            button.addEventListener('click', speakText);
+        });
+</script>
